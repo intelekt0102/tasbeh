@@ -12,7 +12,7 @@ const LOCAL_ASSETS = [
 // Tashqi CDN resurslari
 const EXTERNAL_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
-  'https://fonts.googleapis.com/css2?family=Scheherazade:wght@400;700&amp;display=swap'
+  'https://fonts.googleapis.com/css2?family=Scheherazade:wght@400;700&display=swap'
 ];
 
 // O'rnatish jarayoni
