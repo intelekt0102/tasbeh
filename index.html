@@ -615,13 +615,16 @@
                 gain.connect(audioCtx.destination);
 
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+                // Pastroq va yoqimli chastota
+                osc.frequency.setValueAtTime(440, now); // A4
+                osc.frequency.exponentialRampToValueAtTime(554.37, now + 0.3); // C#5
 
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.08);
-            } catch(e){}
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+                osc.start(now);
+                osc.stop(now + 0.6);
+               } catch(e){}
         }
 
     function playCompletionSound() {
