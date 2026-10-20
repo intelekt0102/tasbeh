@@ -603,11 +603,13 @@
         const vibeBtn = document.getElementById('vibe-toggle');
         const themeBtn = document.getElementById('theme-toggle');
 
-        function playClickSound() {
+function playClickSound() {
             if (!soundEnabled) return;
             try {
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const now = audioCtx.currentTime; // <-- Mana bu yerda 'now' e'lon qilindi!
 
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -615,19 +617,18 @@
                 gain.connect(audioCtx.destination);
 
                 osc.type = 'sine';
-                // Pastroq va yoqimli chastota
-                osc.frequency.setValueAtTime(440, now); // A4
-                osc.frequency.exponentialRampToValueAtTime(554.37, now + 0.3); // C#5
+                osc.frequency.setValueAtTime(440, now); 
+                osc.frequency.exponentialRampToValueAtTime(554.37, now + 0.3); 
 
                 gain.gain.setValueAtTime(0.15, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
 
                 osc.start(now);
                 osc.stop(now + 0.6);
-               } catch(e){}
+            } catch(e){}
         }
 
-    function playCompletionSound() {
+function playCompletionSound() {
     // Shart olib tashlandi — ovoz rejimi o'chirilgan bo'lsa ham signal baribir chaladi!
     try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -649,8 +650,8 @@
 
         osc.start();
         osc.stop(now + 0.5);
-        } catch(e){}
-    }
+    } catch(e){}
+}
 
         function triggerVibration(pattern) {
             if (vibeEnabled && navigator.vibrate) {
