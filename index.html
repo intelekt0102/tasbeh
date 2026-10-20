@@ -704,16 +704,16 @@
         }
 
         // Arabcha matn o'lchamini matn uzunligiga qarab avtomatik kichraytirish funksiyasi
-        function adjustArabicFontSize(text) {
+     function adjustArabicFontSize(text) {
             const len = text.length;
             if (len > 80) {
-                arabicTextEl.style.fontSize = "1.05rem";
-            } else if (len > 50) {
                 arabicTextEl.style.fontSize = "1.2rem";
-            } else if (len > 30) {
+            } else if (len > 50) {
                 arabicTextEl.style.fontSize = "1.4rem";
+            } else if (len > 30) {
+                arabicTextEl.style.fontSize = "1.6rem";
             } else {
-                arabicTextEl.style.fontSize = "1.8rem";
+                arabicTextEl.style.fontSize = "2.1rem";
             }
         }
 
