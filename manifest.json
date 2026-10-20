@@ -1,7 +1,7 @@
 {
   "name": "Tasbehim",
   "short_name": "Tasbehim",
-  "start_url": "./",
+  "start_url": "https://intelekt0102.github.io/tasbeh/",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
