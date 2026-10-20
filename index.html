@@ -331,6 +331,10 @@
             position: relative;
             z-index: 2;
             -webkit-tap-highlight-color: transparent;
+            
+            /* --- IPHONE (IOS) UCHUN QO'SHILADIGAN QISM --- */
+            touch-action: manipulation; /* Tez bosganda zoom bo'lishini to'xtatadi */
+            -webkit-touch-callout: none; /* Bosib turganda qo'shimcha menyu chiqishini oldini oladi */
         }
 
         .tasbeh-circle:active {
