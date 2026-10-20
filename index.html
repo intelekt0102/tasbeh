@@ -604,29 +604,30 @@
         const themeBtn = document.getElementById('theme-toggle');
 
 function playClickSound() {
-            if (!soundEnabled) return;
-            try {
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                if (audioCtx.state === 'suspended') audioCtx.resume();
+    if (!soundEnabled) return;
+    try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
 
-                const now = audioCtx.currentTime; // <-- Mana bu yerda 'now' e'lon qilindi!
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
 
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
+        // Klaviaturaning qisqa va qarsildoq tovushi uchun
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(1200, now);
+        osc.frequency.exponentialRampToValueAtTime(150, now + 0.03);
 
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(440, now); 
-                osc.frequency.exponentialRampToValueAtTime(554.37, now + 0.3); 
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
 
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
-
-                osc.start(now);
-                osc.stop(now + 0.6);
-            } catch(e){}
-        }
+        osc.start(now);
+        osc.stop(now + 0.03);
+    } catch(e){}
+}
 
 function playCompletionSound() {
     // Shart olib tashlandi — ovoz rejimi o'chirilgan bo'lsa ham signal baribir chaladi!
