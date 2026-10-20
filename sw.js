@@ -12,7 +12,7 @@ const LOCAL_ASSETS = [
 // Tashqi CDN resurslari
 const EXTERNAL_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
-  'https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap'
+  'https://fonts.googleapis.com/css2?family=Scheherazade:wght@400;700&amp;family=Amiri&amp;family=Noto+Naskh+Arabic&amp;family=Roboto&amp;display=swap'
 ];
 
 // O'rnatish jarayoni
