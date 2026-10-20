@@ -669,7 +669,7 @@ function playCompletionSound() {
             displayEl.textContent = count;
         }
 
-        function switchMode(mode) {
+function switchMode(mode) {
             currentMode = mode;
             count = 0;
             stepIndex = 0;
@@ -684,8 +684,14 @@ function playCompletionSound() {
             if(mode === 'vird') modeBtns[3].classList.add('active');
 
             if (mode === 'infinite') {
-                zikrCard.style.display = 'none';
                 limitCard.style.display = 'none';
+                zikrCard.style.display = 'flex'; // Kontaynerni ochiq qoldiramiz
+                
+                // Oddiy rejim uchun maxsus matnlar
+                stepBadgeEl.textContent = "Erkin rejim";
+                arabicTextEl.style.fontSize = "1.5rem";
+                arabicTextEl.textContent = "Zikringizni davom eting";
+                translationTextEl.textContent = "Alloh qabul qilsin!";
             } else if (mode === 'limit') {
                 zikrCard.style.display = 'none';
                 limitCard.style.display = 'flex';
@@ -701,7 +707,6 @@ function playCompletionSound() {
             }
             saveState();
         }
-
         // Arabcha matn o'lchamini matn uzunligiga qarab avtomatik kichraytirish funksiyasi
      function adjustArabicFontSize(text) {
             const len = text.length;
