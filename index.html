@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasbehim | Onlayn Elektron Tasbeh</title>
+
+    <!-- PWA va Manifest ulash -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#10b981">
+
+    <!-- iOS Safari uchun maxsus sozlamalar -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Tasbehim">
+    <link rel="apple-touch-icon" href="./icon-192x192.png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-gradient-light: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-bg-light: rgba(255, 255, 255, 0.85);
+            --text-primary-light: #2c3e50;
+            --text-secondary-light: #606f7b;
+            --accent-light: #10b981;
+            --accent-hover-light: #059669;
+            --border-light: rgba(229, 231, 235, 0.8);
+            --shadow-light: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+
+            --bg-gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --card-bg-dark: rgba(30, 41, 59, 0.85);
+            --text-primary-dark: #f8fafc;
+            --text-secondary-dark: #94a3b8;
+            --accent-dark: #10b981;
+            --accent-hover-dark: #34d399;
+            --border-dark: rgba(51, 65, 85, 0.8);
+            --shadow-dark: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        body.light-theme {
+            --bg-gradient: var(--bg-gradient-light);
+            --card-bg: var(--card-bg-light);
+            --text-primary: var(--text-primary-light);
+            --text-secondary: var(--text-secondary-light);
+            --accent: var(--accent-light);
+            --accent-hover: var(--accent-hover-light);
+            --border: var(--border-light);
+            --shadow: var(--shadow-light);
+        }
+
+        body.dark-theme {
+            --bg-gradient: var(--bg-gradient-dark);
+            --card-bg: var(--card-bg-dark);
+            --text-primary: var(--text-primary-dark);
+            --text-secondary: var(--text-secondary-dark);
+            --accent: var(--accent-dark);
+            --accent-hover: var(--accent-hover-dark);
+            --border: var(--border-dark);
+            --shadow: var(--shadow-dark);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 15px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        header {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .logo-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent);
+        }
+
+        .controls-top {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .icon-btn.off {
+            opacity: 0.5;
+            color: var(--text-secondary);
+        }
+
+        main {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .mode-selector {
+            display: flex;
+            background: var(--card-bg);
+            padding: 5px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            width: 100%;
+            gap: 5px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px 8px;
+            border: none;
+            border-radius: 25px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .zikr-info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .arabic-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.8rem;
+            line-height: 1.5;
+            color: var(--accent);
+            direction: rtl;
+        }
+
+        .translation-text {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .step-badge {
+            align-self: center;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent);
+            padding: 4px 14px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .limit-settings-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 15px 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+
+        .target-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .target-input {
+            width: 90px;
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: rgba(0,0,0,0.05);
+            color: var(--text-primary);
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            outline: none;
+        }
+
+        .quick-presets {
+            display: flex;
+            gap: 8px;
+        }
+
+        .preset-btn {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .tasbeh-circle-outer {
+            position: relative;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .tasbeh-circle {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 6px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s;
+            position: relative;
+            z-index: 2;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .tasbeh-circle:active {
+            transform: scale(0.94);
+            border-color: var(--accent);
+        }
+
+        .count-display {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .click-hint {
+            color: var(--accent);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .bottom-actions {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+        }
+
+        .action-btn.undo-btn:hover {
+            border-color: #f59e0b;
+            color: #f59e0b;
+        }
+
+        .action-btn.reset-btn:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: var(--shadow);
+            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 3.5rem;
+            color: var(--accent);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .modal-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.02);
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        @media (max-width: 380px) {
+            .tasbeh-circle-outer { width: 210px; height: 210px; }
+            .tasbeh-circle { width: 190px; height: 190px; }
+            .count-display { font-size: 3.8rem; }
+            .arabic-text { font-size: 1.5rem; }
+            .mode-btn { font-size: 0.75rem; padding: 8px 4px; }
+            .action-btn { font-size: 0.8rem; padding: 10px 8px; }
+        }
+    </style>
+</head>
+<body class="light-theme">
+
+    <header>
+        <div class="logo-title">
+            <i class="fa-solid fa-kaaba"></i>
+            <span>Tasbehim</span>
+        </div>
+        <div class="controls-top">
+            <button class="icon-btn" id="sound-toggle" title="Ovoz">
+                <i class="fa-solid fa-volume-high"></i>
+            </button>
+            <button class="icon-btn" id="vibe-toggle" title="Tebranish">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+            </button>
+            <button class="icon-btn" id="theme-toggle" title="Mavzu">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div class="mode-selector">
+            <button class="mode-btn active" onclick="switchMode('infinite')">Oddiy</button>
+            <button class="mode-btn" onclick="switchMode('limit')">Chegarali</button>
+            <button class="mode-btn" onclick="switchMode('namoz')">Namoz Zikrlari</button>
+            <button class="mode-btn" onclick="switchMode('vird')">Vird</button>
+        </div>
+
+        <div class="zikr-info-card" id="zikr-card" style="display: none;">
+            <span class="step-badge" id="step-badge">25 marta</span>
+            <div class="arabic-text" id="arabic-text">سُبْحَانَ اللَّهِ</div>
+            <div class="translation-text" id="translation-text">Alloh aybu nuqsonsiz, pokdir</div>
+        </div>
+
+        <div class="limit-settings-card" id="limit-card" style="display: none;">
+            <div class="target-input-row">
+                <label for="limit-input">Maqsad soni:</label>
+                <input type="number" id="limit-input" class="target-input" value="33" min="1">
+            </div>
+            <div class="quick-presets">
+                <button class="preset-btn" onclick="setLimit(33)">33</button>
+                <button class="preset-btn" onclick="setLimit(99)">99</button>
+                <button class="preset-btn" onclick="setLimit(100)">100</button>
+            </div>
+        </div>
+
+        <div class="tasbeh-circle-outer">
+            <div class="tasbeh-circle" id="click-area">
+                <span class="count-display" id="display">0</span>
+                <span class="click-hint"><i class="fa-solid fa-fingerprint"></i> Bosing</span>
+            </div>
+        </div>
+
+        <div class="bottom-actions">
+            <button class="action-btn undo-btn" onclick="undoCount()">
+                <i class="fa-solid fa-rotate-left"></i> Orqaga
+            </button>
+            <button class="action-btn reset-btn" onclick="resetCount()">
+                <i class="fa-solid fa-rotate-right"></i> Nolga qaytarish
+            </button>
+        </div>
+    </main>
+
+    <footer>
+        © Tasbehim - Zikrlaringiz va duolaringiz qabul bo'lsin
+    </footer>
+
+    <div class="modal-overlay" id="finish-modal">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div class="modal-title" id="modal-title">Bajarildi!</div>
+            <p id="modal-desc" style="color: var(--text-secondary); line-height: 1.5;">Zikr muvaffaqiyatli yakunlandi. Alloh qabul qilsin!</p>
+            <div id="modal-extra" style="margin-top: 10px; width: 100%;"></div>
+            <button class="modal-btn" onclick="closeModal()">Davom etish</button>
+        </div>
+    </div>
+
+    <script>
+        // Service Worker ro'yxatdan o'tkazish (PWA uchun)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker muvaffaqiyatli ulandi:', reg))
+                    .catch(err => console.log('Service Worker ulanishida xatolik:', err));
+            });
+        }
+
+        let count = 0;
+        let currentMode = 'infinite'; 
+        let limitValue = 33;
+        let stepIndex = 0;
+
+        let soundEnabled = true;
+        let vibeEnabled = true;
+        let isDarkMode = false;
+
+        let audioCtx = null;
+
+        const namozZikrlari = [
+            { arabic: "سُبْحَانَ اللَّهِ", text: "Subhanalloh (Alloh pokdir)", limit: 33 },
+            { arabic: "الْحَمْدُ لِلَّهِ", text: "Alhamdulillah (Allohga hamd bo'lsin)", limit: 33 },
+            { arabic: "اللَّهُ أَكْبَرُ", text: "Allohu Akbar (Alloh buyukdir)", limit: 33 }
+        ];
+
+        const virdZikrlari = [
+            { arabic: "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ، إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ.", text: "Robbig'fir liy va tub 'alayya, innaka antat-Tavvaabur-Rohiym.", limit: 25 },
+            { arabic: "اللَّهُمَّ صَلِّ وَسَلَّمْ وَبَارِكْ عَلَى سَيِّدِنَا مُحَمَّدٍ، وَعَلَى آلِهِ، وَارْضَ عَنْ أَصْحَابِهِ أَجْمَعِينَ.", text: "Allohumma solli va sallim va baarik 'alaa sayyidinaa Muhammadin va 'alaa aalihi vardo 'an as-haabihi ajma'iyn.", limit: 15 },
+            { arabic: "إِلَهِي أَنْتَ مَقْصُودِي، وَرِضَاكَ مَطْلُوبِي.", text: "Ilaahiy anta maqsoudiy va ridooka matluubiy.", limit: 15 },
+            { arabic: "يَا بَاقِي، أَنْتَ البَاقِي.", text: "Yaa Baaqiy, anta Al-Baaqiy.", limit: 25 },
+            { arabic: "يَا ذَا الجَلَالِ وَالإِكْرَامِ.", text: "Yaa Zul-Jalaali val-Ikroom.", limit: 25 },
+            { arabic: "لَا إِلَهَ إِلَّا اللَّهُ.", text: "Laa ilaaha illalloh.", limit: 200 },
+            { arabic: "إِلَّا اللَّهُ.", text: "Illalloh.", limit: 100 },
+            { arabic: "اللَّهُ.", text: "Alloh.", limit: 100 },
+            { arabic: "لَا إِلَهَ إِلَّا اللَّهُ، سَيِّدُنَا مُحَمَّدٌ رَسُولُ اللَّهِ.", text: "Laa ilaaha illalloh, sayyidunaa Muhammadur-Rosuululloh.", limit: 33 },
+            { arabic: "حَقًّا وَصِدْقًا وَيَقِينًا.", text: "Haqqon va sidqon va yaqiynan.", limit: 1 },
+            { arabic: "عَلَيْهَا نَحْيَا، وَعَلَيْهَا نَمُوتُ ، وَعَلَيْهَا وَبِهَا نُبْعَثُ إِنْ شَاءَ اللَّهُ.", text: "'Alayhaa nahyaa, va 'alayhaa namuutu, va 'alayhaa va bihaa nub'asu in sha'alloh.", limit: 3 }
+        ];
+
+        const displayEl = document.getElementById('display');
+        const clickArea = document.getElementById('click-area');
+        const zikrCard = document.getElementById('zikr-card');
+        const limitCard = document.getElementById('limit-card');
+        const limitInput = document.getElementById('limit-input');
+        const arabicTextEl = document.getElementById('arabic-text');
+        const translationTextEl = document.getElementById('translation-text');
+        const stepBadgeEl = document.getElementById('step-badge');
+        const modal = document.getElementById('finish-modal');
+
+        const soundBtn = document.getElementById('sound-toggle');
+        const vibeBtn = document.getElementById('vibe-toggle');
+        const themeBtn = document.getElementById('theme-toggle');
+
+        function playClickSound() {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.08);
+            } catch(e){}
+        }
+
+        function playCompletionSound() {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now); 
+                osc.frequency.setValueAtTime(659.25, now + 0.1); 
+                osc.frequency.setValueAtTime(783.99, now + 0.2); 
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+                osc.start();
+                osc.stop(now + 0.5);
+            } catch(e){}
+        }
+
+        function triggerVibration(pattern) {
+            if (vibeEnabled && navigator.vibrate) {
+                navigator.vibrate(pattern);
+            }
+        }
+
+        function updateDisplay() {
+            displayEl.textContent = count;
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            count = 0;
+            stepIndex = 0;
+            updateDisplay();
+
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            
+            const modeBtns = document.querySelectorAll('.mode-btn');
+            if(mode === 'infinite') modeBtns[0].classList.add('active');
+            if(mode === 'limit') modeBtns[1].classList.add('active');
+            if(mode === 'namoz') modeBtns[2].classList.add('active');
+            if(mode === 'vird') modeBtns[3].classList.add('active');
+
+            if (mode === 'infinite') {
+                zikrCard.style.display = 'none';
+                limitCard.style.display = 'none';
+            } else if (mode === 'limit') {
+                zikrCard.style.display = 'none';
+                limitCard.style.display = 'flex';
+                limitValue = parseInt(limitInput.value) || 33;
+            } else if (mode === 'namoz') {
+                limitCard.style.display = 'none';
+                zikrCard.style.display = 'flex';
+                updateZikrCard(namozZikrlari);
+            } else if (mode === 'vird') {
+                limitCard.style.display = 'none';
+                zikrCard.style.display = 'flex';
+                updateZikrCard(virdZikrlari);
+            }
+            saveState();
+        }
+
+        function updateZikrCard(list) {
+            const current = list[stepIndex];
+            arabicTextEl.textContent = current.arabic;
+            translationTextEl.textContent = current.text;
+            stepBadgeEl.textContent = `${current.limit} marta`;
+        }
+
+        function setLimit(val) {
+            limitInput.value = val;
+            limitValue = val;
+            count = 0;
+            updateDisplay();
+            saveState();
+        }
+
+        clickArea.addEventListener('click', function() {
+            playClickSound();
+            triggerVibration(30);
+
+            count++;
+            updateDisplay();
+
+            if (currentMode === 'limit') {
+                if (count >= limitValue) {
+                    playCompletionSound();
+                    triggerVibration([100, 50, 100]);
+                    showModal("Maqsadga erishildi!", `${limitValue} marta zikr bajarildi. Alloh qabul qilsin!`);
+                    count = 0;
+                    updateDisplay();
+                }
+            } else if (currentMode === 'namoz') {
+                const currentZikr = namozZikrlari[stepIndex];
+                if (count >= currentZikr.limit) {
+                    playCompletionSound();
+                    triggerVibration([100, 50, 100]);
+                    stepIndex++;
+                    count = 0;
+                    updateDisplay();
+
+                    if (stepIndex < namozZikrlari.length) {
+                        updateZikrCard(namozZikrlari);
+                    } else {
+                        const tahlilHTML = `
+                            <div style="background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 12px; margin-top: 10px;">
+                                <div style="font-family: 'Amiri', serif; font-size: 1.3rem; color: var(--accent); direction: rtl; margin-bottom: 8px;">
+                                    لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ
+                                </div>
+                                <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                                    Laa ilaaha illallohu vahdahu laa shariyka lah, lahul mulku va lahul hamd, va huva 'alaa kulli shay'in qodiyr.
+                                </div>
+                            </div>
+                        `;
+                        showModal("Namoz Zikrlari Bajarildi!", "Barcha 33 martalik zikrlar yakunlandi.", tahlilHTML);
+                        stepIndex = 0;
+                        updateZikrCard(namozZikrlari);
+                    }
+                }
+            } else if (currentMode === 'vird') {
+                const currentZikr = virdZikrlari[stepIndex];
+                if (count >= currentZikr.limit) {
+                    playCompletionSound();
+                    triggerVibration([100, 50, 100]);
+                    stepIndex++;
+                    count = 0;
+                    updateDisplay();
+
+                    if (stepIndex < virdZikrlari.length) {
+                        updateZikrCard(virdZikrlari);
+                    } else {
+                        showModal("Vird To'liq Bajarildi!", "Barcha 11 bosqichdagi vird zikrlari muvaffaqiyatli yakunlandi. Alloh qabul qilsin!");
+                        stepIndex = 0;
+                        updateZikrCard(virdZikrlari);
+                    }
+                }
+            }
+            saveState();
+        });
+
+        function undoCount() {
+            if (count > 0) {
+                count--;
+                updateDisplay();
+                triggerVibration(20);
+            } else if (currentMode === 'namoz' && stepIndex > 0) {
+                stepIndex--;
+                count = namozZikrlari[stepIndex].limit - 1;
+                updateZikrCard(namozZikrlari);
+                updateDisplay();
+                triggerVibration(20);
+            } else if (currentMode === 'vird' && stepIndex > 0) {
+                stepIndex--;
+                count = virdZikrlari[stepIndex].limit - 1;
+                updateZikrCard(virdZikrlari);
+                updateDisplay();
+                triggerVibration(20);
+            }
+            saveState();
+        }
+
+        limitInput.addEventListener('change', function() {
+            let val = parseInt(this.value);
+            if (!val || val < 1) val = 1;
+            limitValue = val;
+            count = 0;
+            updateDisplay();
+            saveState();
+        });
+
+        function resetCount() {
+            count = 0;
+            updateDisplay();
+            saveState();
+        }
+
+        function showModal(title, desc, extraHTML = '') {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-desc').textContent = desc;
+            document.getElementById('modal-extra').innerHTML = extraHTML;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        soundBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundBtn.classList.toggle('off', !soundEnabled);
+            saveState();
+        });
+
+        vibeBtn.addEventListener('click', () => {
+            vibeEnabled = !vibeEnabled;
+            vibeBtn.classList.toggle('off', !vibeEnabled);
+            saveState();
+        });
+
+        themeBtn.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            applyTheme();
+            saveState();
+        });
+
+        function applyTheme() {
+            if (isDarkMode) {
+                document.body.classList.remove('light-theme');
+                document.body.classList.add('dark-theme');
+                themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+            } else {
+                document.body.classList.remove('dark-theme');
+                document.body.classList.add('light-theme');
+                themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem('tasbeh_count', count);
+            localStorage.setItem('tasbeh_mode', currentMode);
+            localStorage.setItem('tasbeh_limit', limitValue);
+            localStorage.setItem('tasbeh_step', stepIndex);
+            localStorage.setItem('tasbeh_sound', soundEnabled);
+            localStorage.setItem('tasbeh_vibe', vibeEnabled);
+            localStorage.setItem('tasbeh_dark', isDarkMode);
+        }
+
+        function loadState() {
+            const savedCount = localStorage.getItem('tasbeh_count');
+            const savedMode = localStorage.getItem('tasbeh_mode');
+            const savedLimit = localStorage.getItem('tasbeh_limit');
+            const savedStep = localStorage.getItem('tasbeh_step');
+            const savedSound = localStorage.getItem('tasbeh_sound');
+            const savedVibe = localStorage.getItem('tasbeh_vibe');
+            const savedDark = localStorage.getItem('tasbeh_dark');
+
+            if (savedCount !== null) count = parseInt(savedCount);
+            if (savedLimit !== null) {
+                limitValue = parseInt(savedLimit);
+                limitInput.value = limitValue;
+            }
+            if (savedStep !== null) stepIndex = parseInt(savedStep);
+            if (savedSound !== null) {
+                soundEnabled = savedSound === 'true';
+                soundBtn.classList.toggle('off', !soundEnabled);
+            }
+            if (savedVibe !== null) {
+                vibeEnabled = savedVibe === 'true';
+                vibeBtn.classList.toggle('off', !vibeEnabled);
+            }
+            if (savedDark !== null) {
+                isDarkMode = savedDark === 'true';
+                applyTheme();
+            }
+
+            if (savedMode !== null) {
+                switchMode(savedMode);
+            } else {
+                switchMode('infinite');
+            }
+            updateDisplay();
+        }
+
+        loadState();
+    </script>
+</body>
+</html>
