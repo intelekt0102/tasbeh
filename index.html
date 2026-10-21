@@ -773,68 +773,65 @@ function switchMode(mode) {
             saveState();
         }
 
-        clickArea.addEventListener('click', function() {
-            playClickSound();
-            triggerVibration(30);
+clickArea.addEventListener('click', function() {
+    playClickSound();
+    triggerVibration(30); // Oddiy bosishdagi qisqa tebranish
 
-            count++;
+    count++;
+    updateDisplay();
+
+    if (currentMode === 'limit') {
+        if (count >= limitValue) {
+            playCompletionSound(); // Bu yerning o'zi 900ms vibratsiyani qoidalarga ko'ra boshqaradi
+            showModal("Maqsadga erishildi!", `${limitValue} marta zikr bajarildi. Alloh qabul qilsin!`);
+            count = 0;
+            updateDisplay();
+        }
+    } else if (currentMode === 'namoz') {
+        const currentZikr = namozZikrlari[stepIndex];
+        if (count >= currentZikr.limit) {
+            playCompletionSound(); 
+            stepIndex++;
+            count = 0;
             updateDisplay();
 
-            if (currentMode === 'limit') {
-                if (count >= limitValue) {
-                    playCompletionSound();
-                    triggerVibration([100, 50, 100]);
-                    showModal("Maqsadga erishildi!", `${limitValue} marta zikr bajarildi. Alloh qabul qilsin!`);
-                    count = 0;
-                    updateDisplay();
-                }
-            } else if (currentMode === 'namoz') {
-                const currentZikr = namozZikrlari[stepIndex];
-                if (count >= currentZikr.limit) {
-                    playCompletionSound();
-                    triggerVibration([100, 50, 100]);
-                    stepIndex++;
-                    count = 0;
-                    updateDisplay();
-
-                    if (stepIndex < namozZikrlari.length) {
-                        updateZikrCard(namozZikrlari);
-                    } else {
-                        const tahlilHTML = `
-                            <div style="background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 12px; margin-top: 10px;">
-                                <div style="font-family: 'Scheherazade', serif; font-size: 1.3rem; color: var(--accent); direction: rtl; margin-bottom: 8px;">
-                                    لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ
-                                </div>
-                                <div style="font-size: 0.85rem; color: var(--text-secondary);">
-                                    Laa ilaaha illallohu vahdahu laa shariyka lah, lahul mulku va lahul hamd, va huva 'alaa kulli shay'in qodiyr.
-                                </div>
-                            </div>
-                        `;
-                        showModal("Namoz Zikrlari Bajarildi!", "Barcha 33 martalik zikrlar yakunlandi.", tahlilHTML);
-                        stepIndex = 0;
-                        updateZikrCard(namozZikrlari);
-                    }
-                }
-            } else if (currentMode === 'vird') {
-                const currentZikr = virdZikrlari[stepIndex];
-                if (count >= currentZikr.limit) {
-                    playCompletionSound();
-                    triggerVibration([100, 50, 100]);
-                    stepIndex++;
-                    count = 0;
-                    updateDisplay();
-
-                    if (stepIndex < virdZikrlari.length) {
-                        updateZikrCard(virdZikrlari);
-                    } else {
-                        showModal("Endi duo qiling! Keyin Fotiha surasini o'qing! Shu bilan tamom!");
-                        stepIndex = 0;
-                        updateZikrCard(virdZikrlari);
-                    }
-                }
+            if (stepIndex < namozZikrlari.length) {
+                updateZikrCard(namozZikrlari);
+            } else {
+                const tahlilHTML = `
+                    <div style="background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 12px; margin-top: 10px;">
+                        <div style="font-family: 'Scheherazade', serif; font-size: 1.3rem; color: var(--accent); direction: rtl; margin-bottom: 8px;">
+                            لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                            Laa ilaaha illallohu vahdahu laa shariyka lahu, lahul mulku va lahul hamd, va huva 'alaa kulli shay'in qodiyr.
+                        </div>
+                    </div>
+                `;
+                showModal("Namoz Zikrlari Bajarildi!", "Barcha 33 martalik zikrlar yakunlandi.", tahlilHTML);
+                stepIndex = 0;
+                updateZikrCard(namozZikrlari);
             }
-            saveState();
-        });
+        }
+    } else if (currentMode === 'vird') {
+        const currentZikr = virdZikrlari[stepIndex];
+        if (count >= currentZikr.limit) {
+            playCompletionSound(); 
+            stepIndex++;
+            count = 0;
+            updateDisplay();
+
+            if (stepIndex < virdZikrlari.length) {
+                updateZikrCard(virdZikrlari);
+            } else {
+                showModal("Endi duo qiling! Keyin Fotiha surasini o'qing! Shu bilan tamom!");
+                stepIndex = 0;
+                updateZikrCard(virdZikrlari);
+            }
+        }
+    }
+    saveState();
+});
 
         function undoCount() {
             if (count > 0) {
