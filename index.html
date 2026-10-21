@@ -634,6 +634,18 @@ function playClickSound() {
 }
 
 function playCompletionSound() {
+    // 1. Vibratsiya sharti: Vibratsiya yoqilgan YOKI ovoz o'chirilgan bo'lsa ishlaydi
+    if (vibeEnabled || !soundEnabled) {
+        try {
+            if ("vibrate" in navigator) {
+                navigator.vibrate(900);
+            }
+        } catch(e) {}
+    }
+
+    // 2. Ovoz sharti: Faqat ovoz yoqilgan bo'lsagina chalinadi
+    if (!soundEnabled) return;
+
     try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -647,18 +659,13 @@ function playCompletionSound() {
         gain.connect(audioCtx.destination);
 
         osc.type = 'square';
-        osc.frequency.setValueAtTime(1000, now);
+        osc.frequency.setValueAtTime(1200, now);
 
         gain.gain.setValueAtTime(0.02, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
 
         osc.start(now);
         osc.stop(now + 0.9);
-
-        // Ovoz bilan bir vaqtda uzunroq vibratsiya berish (masalan: 900 millisekund)
-        if ("vibrate" in navigator) {
-            navigator.vibrate(900); 
-        }
     } catch(e){}
 }
 
