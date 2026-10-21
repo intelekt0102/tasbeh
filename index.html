@@ -634,8 +634,32 @@ function playClickSound() {
 }
 
 function playCompletionSound() {
-    // 1. Vibratsiya sharti: Vibratsiya yoqilgan YOKI ovoz o'chirilgan bo'lsa ishlaydi
-    if (vibeEnabled || !soundEnabled) {
+    let shouldPlaySound = true;
+    let shouldPlayVibe = true;
+
+    if (soundEnabled && vibeEnabled) {
+        // 1. Ovoz ON / Vibratsiya ON -> Ovoz chalinadi + 900ms vibratsiya
+        shouldPlaySound = true;
+        shouldPlayVibe = true;
+    } 
+    else if (!soundEnabled && vibeEnabled) {
+        // 2. Ovoz OFF / Vibratsiya ON -> Ovoz chalinmaydi + 900ms vibratsiya
+        shouldPlaySound = false;
+        shouldPlayVibe = true;
+    } 
+    else if (soundEnabled && !vibeEnabled) {
+        // 3. Ovoz ON / Vibratsiya OFF -> Ovoz chalinadi + vibratsiya YO'Q
+        shouldPlaySound = true;
+        shouldPlayVibe = false;
+    } 
+    else if (!soundEnabled && !vibeEnabled) {
+        // 4. Ovoz OFF / Vibratsiya OFF -> Ovoz chalinmaydi + 900ms vibratsiya
+        shouldPlaySound = false;
+        shouldPlayVibe = true;
+    }
+
+    // 1. Vibratsiyani ijro etish
+    if (shouldPlayVibe) {
         try {
             if ("vibrate" in navigator) {
                 navigator.vibrate(900);
@@ -643,8 +667,8 @@ function playCompletionSound() {
         } catch(e) {}
     }
 
-    // 2. Ovoz sharti: Faqat ovoz yoqilgan bo'lsagina chalinadi
-    if (!soundEnabled) return;
+    // 2. Ovozni ijro etish
+    if (!shouldPlaySound) return;
 
     try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
