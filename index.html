@@ -622,14 +622,14 @@ function playClickSound() {
 
         // Klaviaturaning qisqa va qarsildoq tovushi uchun
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(1000, now);
-        osc.frequency.exponentialRampToValueAtTime(150, now + 0.03);
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(150, now + 0.02);
 
         gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
 
         osc.start(now);
-        osc.stop(now + 0.03);
+        osc.stop(now + 0.02);
     } catch(e){}
 }
 
@@ -647,7 +647,7 @@ function playCompletionSound() {
         gain.connect(audioCtx.destination);
 
         osc.type = 'square';
-        osc.frequency.setValueAtTime(1200, now);
+        osc.frequency.setValueAtTime(1000, now);
 
         gain.gain.setValueAtTime(0.02, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
@@ -655,9 +655,9 @@ function playCompletionSound() {
         osc.start(now);
         osc.stop(now + 0.9);
 
-        // Ovoz bilan bir vaqtda uzunroq vibratsiya berish (masalan: 400 millisekund)
+        // Ovoz bilan bir vaqtda uzunroq vibratsiya berish (masalan: 900 millisekund)
         if ("vibrate" in navigator) {
-            navigator.vibrate(400); 
+            navigator.vibrate(900); 
         }
     } catch(e){}
 }
